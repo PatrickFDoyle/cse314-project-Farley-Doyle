@@ -65,6 +65,5 @@ def PublisherGraph(games):
     plt.show()
 
 
-games=Top100()
-PublisherGraph(games)
+
 #ReceptionByGenre("Early+Access")
