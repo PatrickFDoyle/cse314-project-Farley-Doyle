@@ -6,11 +6,13 @@ import numpy as np
 
 def GamesInGenre(genre): #returns dataframe 
     response = rq.get("http://steamspy.com/api.php?request=genre&genre="+genre)
+    print(response)
     data = (
         response.json()
     )  # based on this https://atcoordinates.info/2019/09/24/examples-of-using-the-census-bureaus-api-with-python/
     #print(data)
     df = pd.DataFrame(data)
+    print(df)
     return df
 def SumReviews(games):
     pos=games.loc['positive'].sum()
@@ -64,6 +66,20 @@ def PublisherGraph(games):
     plt.xticks(fontsize=14,rotation = 90)
     plt.show()
 
-
-
-#ReceptionByGenre("Early+Access")
+def playtimeByGenre(genre): #we are using playtime of two weeks because using forever playtime massively skews the data towards outliers, and we get ridculous results like the average playtime being 300 hours.
+    print(genre)
+    games=GamesInGenre(genre)
+    print(games.index)
+    average_playtime_twoweeks=games.loc['average_2weeks'].mean()
+    return average_playtime_twoweeks
+def graphPlaytimeOfGenres():
+    genres = ["Action","Strategy","RPG","Indie","Adventure","Sports","Simulation","Early+Access","Ex+Early+Access","MMO","Free"]
+    playtimes =[]
+    for genre in genres:
+        print(genre)
+        time = playtimeByGenre(genre)
+        print("THE TIME IS", time)
+        playtimes.append(playtimeByGenre(genre))
+    print(playtimes)
+print(playtimeByGenre("Early+Access"))
+#graphPlaytimeOfGenres()
