@@ -28,11 +28,9 @@ def ReceptionByGenre(genre):
     plt.show()
 def Top100(): #returns the top 100 steam games of all time
     response = rq.get("http://steamspy.com/api.php?request=top100forever")
-    print(response)
     data = (
         response.json()
     )  # based on this https://atcoordinates.info/2019/09/24/examples-of-using-the-census-bureaus-api-with-python/
-    #print(data)
     print("The data is",data)
     df = pd.DataFrame(data)
     return df
@@ -67,13 +65,32 @@ def playtimeByGenre(genre): #we are using playtime of two weeks because using fo
     average_playtime_twoweeks=games.loc['average_2weeks'].mean()
     return average_playtime_twoweeks
 def graphPlaytimeOfGenres(): #this one takes a lot of time as it's basically gathering every game on steam
-    genres = ["Action","Strategy","RPG","Indie","Adventure","Sports","Simulation","Early+Access","Ex+Early+Access","Free"]
+    genres = ["Action","Strategy","RPG","Indie","Adventure","Sports","Simulation","Early+Access","Ex+Early+Access","Free","Massively"]
     playtimes =[]
     for genre in genres:
         time = playtimeByGenre(genre)
         playtimes.append(playtimeByGenre(genre))
     print(playtimes)
     plt.title("Average playtime of each genre")
-    plt.bar(genres,playtimes)
+    genreslabels= ["Action","Strategy","RPG","Indie","Adventure","Sports","Simulation","Early+Access","Ex+Early+Access","Free","MMO"]
+    plt.bar(genreslabels,playtimes)
     plt.xticks(fontsize=14,rotation = 90)
+    plt.ylabel("Time in hours")
     plt.show()
+def getAllGames():
+    response = rq.get("http://steamspy.com/api.php?request=all")
+    print(response)
+    data = (
+        response.json()
+    )  # based on this https://atcoordinates.info/2019/09/24/examples-of-using-the-census-bureaus-api-with-python/
+    print(data)
+    df = pd.DataFrame(data)
+    print(df)
+    return df
+def effectOfSalesOnCCU():
+    games = getAllGames()
+    games.loc['discount'] = pd.to_numeric(games.loc['discount'])
+    print(games.loc['discount'])
+    print(games.index)
+    discounted_games = games.loc[games.loc['discount']>0]
+    #discounted_games=games.query('discount>0')
