@@ -66,15 +66,12 @@ def PublisherGraph():
             publisherdict[publisher]=cleanedpubs.count(publisher)
         #else:
         #    publisherdict['other']+=1
-    if ' Inc.' in publisherdict:
-        publisherdict.pop(' Inc.')
-    if ' Ltd.' in publisherdict:
-        publisherdict.pop(' Ltd.')
     uniquepublishers = publisherdict.keys()
     plt.title("Publishers frequency in top 100 steam games")
     plt.bar(uniquepublishers,publisherdict.values())
     plt.xticks(fontsize=14,rotation = 90)
     plt.show()
+    print(publisherdict)
 
 def playtimeByGenre(genre): #we are using playtime of two weeks because using forever playtime massively skews the data towards outliers, and we get ridculous results like the average playtime being 300 hours.
     games=GamesInGenre(genre)
@@ -123,10 +120,14 @@ def cleanGames():
         tempcleaned=[]
         cleaned=pub.split(';')
         for values in cleaned:
+            values = values.removesuffix("(Mac)")
+            values = values.removesuffix("(Linux)")
             tempcleaned.append(values)
+        tempcleaned=[*set(tempcleaned)]
         cleanedpubs.append(tempcleaned)
     df.drop('publisher',axis=1)
     df['publisher']=cleanedpubs
+    
     #clean platforms
     cleanedplat=[]
     platform=(df.platforms.values.tolist())
