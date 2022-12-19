@@ -3,6 +3,32 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
 from ast import literal_eval
+
+def GamesFromPublisher(publisher): #returns dataframe of games by publisher 
+    df = pd.read_csv('clean_games.csv')
+    df.publisher = df.publisher.apply(literal_eval)
+    mask = df.publisher.apply(lambda x: publisher in x) # taken from https://stackoverflow.com/questions/41518920/python-pandas-how-to-query-if-a-list-type-column-contains-something
+    games =df[mask]
+    return games
+def GenresOfPublisher(publisher):
+    games = GamesFromPublisher(publisher)
+    games.genres = games.genres.apply(literal_eval)
+    genredict={}
+    cleanedgenres=[]
+    genres=(games.genres.values.tolist())
+    for genre_list in genres:
+        for genre in genre_list:
+            cleanedgenres.append(genre)
+    for genre in cleanedgenres:
+        num=cleanedgenres.count(genre)
+        genredict[genre]=cleanedgenres.count(genre)
+    labels = genredict.keys()
+    plt.title("Kinds of games " + publisher + " publishes")
+    plt.pie(genredict.values(),labels=labels)
+    plt.xticks(fontsize=14,rotation = 90)
+    plt.show()
+
+
 def GamesInGenre(genre): #returns dataframe 
     
     df = pd.read_csv('clean_games.csv')
@@ -49,7 +75,6 @@ def PublisherGraph():
     plt.bar(uniquepublishers,publisherdict.values())
     plt.xticks(fontsize=14,rotation = 90)
     plt.show()
-    print(publisherdict)
 
 def playtimeByGenre(genre): #we are using playtime of two weeks because using forever playtime massively skews the data towards outliers, and we get ridculous results like the average playtime being 300 hours.
     games=GamesInGenre(genre)
@@ -129,4 +154,3 @@ def cleanGames():
     df['review_ratio']=ratio
     df['total_ratings']=df['positive_ratings']+df['negative_ratings']
     df.to_csv('clean_games.csv',index=False)
-print(playtimeByGenre("Action"))
