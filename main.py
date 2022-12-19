@@ -1,5 +1,4 @@
 from typing import List
-import requests as rq
 import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
@@ -94,3 +93,42 @@ def effectOfSalesOnCCU():
     print(games.index)
     discounted_games = games.loc[games.loc['discount']>0]
     #discounted_games=games.query('discount>0')
+def cleanGames():
+    df = pd.read_csv('steam.csv')
+    #clean genres
+    cleanedgenres=[]
+    genres=(df.genres.values.tolist())
+    for genre in genres:
+        tempcleaned=[]
+        cleaned=genre.split(';')
+        for values in cleaned:
+            tempcleaned.append(values)
+        cleanedgenres.append(tempcleaned)
+    df.drop('genres',axis=1)
+    df['genres']=cleanedgenres
+    #clean tags
+    cleanedtags=[]
+    tags =df.steamspy_tags.values.tolist()
+    for tag in tags:
+        tempcleaned=[]
+        cleaned = tag.split(';')
+        for values in cleaned:
+            tempcleaned.append(values)
+        cleanedtags.append(tempcleaned)
+    df.drop('steamspy_tags',axis=1)
+    df['tags']=cleanedtags
+    #clean developers
+    cleaneddevs=[]
+    developer=(df.developer.values.tolist())
+    for dev in developer:
+        tempcleaned=[]
+        cleaned=dev.split(';')
+        for values in cleaned:
+            tempcleaned.append(values)
+        cleaneddevs.append(tempcleaned)
+    df.drop('developer',axis=1)
+    df['developer']=cleaneddevs
+    #clean publisher
+    return df
+data = getClean()
+print(data.developer)
