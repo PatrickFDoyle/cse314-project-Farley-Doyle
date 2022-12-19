@@ -2,47 +2,38 @@ from typing import List
 import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
-
+from ast import literal_eval
 def GamesInGenre(genre): #returns dataframe 
-    response = rq.get("http://steamspy.com/api.php?request=genre&genre="+genre)
-    data = (
-        response.json()
-    )  # based on this https://atcoordinates.info/2019/09/24/examples-of-using-the-census-bureaus-api-with-python/
-    #print(data)
-    df = pd.DataFrame(data)
-    return df
+    
+    df = pd.read_csv('clean_games.csv')
+    mask = df.genres.apply(lambda x: genre in x) # taken from https://stackoverflow.com/questions/41518920/python-pandas-how-to-query-if-a-list-type-column-contains-something
+    games =df[mask]
+    return games
 def SumReviews(games):
-    pos=games.loc['positive'].sum()
-    neg = games.loc['negative'].sum()
+    pos=games.positive_ratings.sum()
+    neg = games.negative_ratings.sum()
     return [pos,neg]
 def ReceptionByGenre(genre):
     games=GamesInGenre(genre)
     reviews=SumReviews(games)
-    #positive=reviews[0]
-    #negative=reviews[1]
     data = np.array(reviews)
     sentiment=["Positive","Negative"]
     plt.title("Sentiments of "+genre+" Games")
     plt.pie(data, labels = sentiment,autopct='%1.1f%%')
     plt.show()
 def Top100(): #returns the top 100 steam games of all time
-    response = rq.get("http://steamspy.com/api.php?request=top100forever")
-    data = (
-        response.json()
-    )  # based on this https://atcoordinates.info/2019/09/24/examples-of-using-the-census-bureaus-api-with-python/
-    print("The data is",data)
-    df = pd.DataFrame(data)
-    return df
-def PublisherGraph(games):
-    #publishers = (games.loc['publisher'].unique())
-    publishers=(games.loc['publisher']).values.tolist()
-    cleanedpubs=[]
-    for publisher in publishers:
-        cleaned=publisher.split(',')
-        for values in cleaned:
-            cleanedpubs.append(values)
+    df = pd.read_csv('clean_games.csv')
+    return df.nlargest(100,'total_ratings')
+def PublisherGraph():
+    games=Top100()
+    games.publisher = games.publisher.apply(literal_eval) #https://stackoverflow.com/questions/32742976/how-to-read-a-column-of-csv-as-dtype-list-using-pandas
     publisherdict={}
     #publisherdict['other']=0
+    publishers=(games.publisher.values.tolist())
+    cleanedpubs=[]
+    for pub_list in publishers:
+        for publisher in pub_list:
+            cleanedpubs.append(publisher)
     for publisher in cleanedpubs:
         num=cleanedpubs.count(publisher)
         if(num>1):
@@ -58,41 +49,13 @@ def PublisherGraph(games):
     plt.bar(uniquepublishers,publisherdict.values())
     plt.xticks(fontsize=14,rotation = 90)
     plt.show()
+    print(publisherdict)
 
 def playtimeByGenre(genre): #we are using playtime of two weeks because using forever playtime massively skews the data towards outliers, and we get ridculous results like the average playtime being 300 hours.
     games=GamesInGenre(genre)
-    average_playtime_twoweeks=games.loc['average_2weeks'].mean()
+    games['median_playtime']=pd.to_numeric(games["median_playtime"])
+    average_playtime_twoweeks=games.median_playtime.mean()
     return average_playtime_twoweeks
-def graphPlaytimeOfGenres(): #this one takes a lot of time as it's basically gathering every game on steam
-    genres = ["Action","Strategy","RPG","Indie","Adventure","Sports","Simulation","Early+Access","Ex+Early+Access","Free","Massively"]
-    playtimes =[]
-    for genre in genres:
-        time = playtimeByGenre(genre)
-        playtimes.append(playtimeByGenre(genre))
-    print(playtimes)
-    plt.title("Average playtime of each genre")
-    genreslabels= ["Action","Strategy","RPG","Indie","Adventure","Sports","Simulation","Early+Access","Ex+Early+Access","Free","MMO"]
-    plt.bar(genreslabels,playtimes)
-    plt.xticks(fontsize=14,rotation = 90)
-    plt.ylabel("Time in hours")
-    plt.show()
-def getAllGames():
-    response = rq.get("http://steamspy.com/api.php?request=all")
-    print(response)
-    data = (
-        response.json()
-    )  # based on this https://atcoordinates.info/2019/09/24/examples-of-using-the-census-bureaus-api-with-python/
-    print(data)
-    df = pd.DataFrame(data)
-    print(df)
-    return df
-def effectOfSalesOnCCU():
-    games = getAllGames()
-    games.loc['discount'] = pd.to_numeric(games.loc['discount'])
-    print(games.loc['discount'])
-    print(games.index)
-    discounted_games = games.loc[games.loc['discount']>0]
-    #discounted_games=games.query('discount>0')
 def cleanGames():
     df = pd.read_csv('steam.csv')
     #clean genres
@@ -129,6 +92,41 @@ def cleanGames():
     df.drop('developer',axis=1)
     df['developer']=cleaneddevs
     #clean publisher
-    return df
-data = getClean()
-print(data.developer)
+    cleanedpubs=[]
+    publisher=(df.publisher.values.tolist())
+    for pub in publisher:
+        tempcleaned=[]
+        cleaned=pub.split(';')
+        for values in cleaned:
+            tempcleaned.append(values)
+        cleanedpubs.append(tempcleaned)
+    df.drop('publisher',axis=1)
+    df['publisher']=cleanedpubs
+    #clean platforms
+    cleanedplat=[]
+    platform=(df.platforms.values.tolist())
+    for plat in platform:
+        tempcleaned=[]
+        cleaned=plat.split(';')
+        for values in cleaned:
+            tempcleaned.append(values)
+        cleanedplat.append(tempcleaned)
+    df.drop('platforms',axis=1)
+    df['platforms']=cleanedplat
+    #clean categories
+    cleanedcat=[]
+    categories=(df.categories.values.tolist())
+    for cat in categories:
+        tempcleaned=[]
+        cleaned=cat.split(';')
+        for values in cleaned:
+            tempcleaned.append(values)
+        cleanedcat.append(tempcleaned)
+    df.drop('categories',axis=1)
+    df['categories']=cleanedcat
+    #add review ratio
+    ratio =df['positive_ratings']/(df['positive_ratings']+df['negative_ratings'])
+    df['review_ratio']=ratio
+    df['total_ratings']=df['positive_ratings']+df['negative_ratings']
+    df.to_csv('clean_games.csv',index=False)
+print(playtimeByGenre("Action"))
