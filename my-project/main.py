@@ -154,4 +154,3 @@ def CleanGames():
     df['review_ratio']=ratio
     df['total_ratings']=df['positive_ratings']+df['negative_ratings']
     df.to_csv('clean_games.csv',index=False)
-CleanGames()
