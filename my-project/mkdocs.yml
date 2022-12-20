@@ -13,6 +13,7 @@ nav:
   - Installation: Installation.ipynb
   - Feature Documentation: Feature Documentation.ipynb
   - Contributing Guide: Contributing Guide.ipynb
+  - Getting Started: GettingStarted.ipnyb
 
 theme: readthedocs
 plugins:
