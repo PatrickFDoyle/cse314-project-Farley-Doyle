@@ -71,7 +71,6 @@ def PublisherGraph():
     plt.bar(uniquepublishers,publisherdict.values())
     plt.xticks(fontsize=14,rotation = 90)
     plt.show()
-    print(publisherdict)
 
 def playtimeByGenre(genre): #we are using playtime of two weeks because using forever playtime massively skews the data towards outliers, and we get ridculous results like the average playtime being 300 hours.
     games=GamesInGenre(genre)

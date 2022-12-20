@@ -5,6 +5,9 @@ nav:
   - GamesInGenre: GamesInGenre.ipynb
   - GenreOfPublisher: GenreOfPublisher.ipynb
   - SumReviews: SumReviews.ipynb
+  - ReceptionByGenre: ReceptionByGenre.ipynb
+  - Top100: Top100.ipynb
+  - PublisherGraph: PublisherGraph.ipynb
 
 theme: readthedocs
 plugins:
