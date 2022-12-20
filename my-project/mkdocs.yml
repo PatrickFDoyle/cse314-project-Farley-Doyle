@@ -1,6 +1,9 @@
 site_name: Steam Project Documentation
 nav:
   - Home: index.md
+  - Installation: Installation.ipynb
+  - Getting Started: GettingStarted.ipynb
+  - Feature Documentation: Feature Documentation.ipynb
   - GamesFromPublisher: GamesFromPublisher.ipynb
   - GamesInGenre: GamesInGenre.ipynb
   - GenreOfPublisher: GenreOfPublisher.ipynb
@@ -9,11 +12,9 @@ nav:
   - Top100: Top100.ipynb
   - PublisherGraph: PublisherGraph.ipynb
   - PlaytimeByGenre: PlaytimeByGenre.ipynb
-  - CleanGames: CleanGames.ipynb
-  - Installation: Installation.ipynb
-  - Feature Documentation: Feature Documentation.ipynb
+  - CleanGames: CleanGames.ipynb  
   - Contributing Guide: Contributing Guide.ipynb
-  - Getting Started: GettingStarted.ipnyb
+  
 
 theme: readthedocs
 plugins:
