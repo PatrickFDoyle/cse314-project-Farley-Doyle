@@ -99,7 +99,7 @@ def CleanGames():
         for values in cleaned:
             tempcleaned.append(values)
         cleanedtags.append(tempcleaned)
-    df.drop('steamspy_tags',axis=1)
+    df =df.drop('steamspy_tags',axis=1)
     df['tags']=cleanedtags
     #clean developers
     cleaneddevs=[]
@@ -154,3 +154,4 @@ def CleanGames():
     df['review_ratio']=ratio
     df['total_ratings']=df['positive_ratings']+df['negative_ratings']
     df.to_csv('clean_games.csv',index=False)
+CleanGames()
