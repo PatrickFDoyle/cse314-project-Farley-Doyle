@@ -11,7 +11,8 @@ nav:
   - PlaytimeByGenre: PlaytimeByGenre.ipynb
   - CleanGames: CleanGames.ipynb
   - Installation: Installation.ipynb
-  - Feature Documentation: Feature Documentation.ipynb 
+  - Feature Documentation: Feature Documentation.ipynb
+  - Contributing Guide: Contributing Guide.ipynb
 
 theme: readthedocs
 plugins:
