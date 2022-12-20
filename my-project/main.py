@@ -5,7 +5,7 @@ import numpy as np
 from ast import literal_eval
 
 def GamesFromPublisher(publisher): #returns dataframe of games by publisher 
-    df = pd.read_csv('clean_games.csv')
+    df = pd.read_csv('./clean_games.csv')
     df.publisher = df.publisher.apply(literal_eval)
     mask = df.publisher.apply(lambda x: publisher in x) # taken from https://stackoverflow.com/questions/41518920/python-pandas-how-to-query-if-a-list-type-column-contains-something
     games =df[mask]
@@ -48,7 +48,7 @@ def ReceptionByGenre(genre):
     plt.pie(data, labels = sentiment,autopct='%1.1f%%')
     plt.show()
 def Top100(): #returns the top 100 steam games of all time
-    df = pd.read_csv('clean_games.csv')
+    df = pd.read_csv('./clean_games.csv')
     return df.nlargest(100,'total_ratings')
 def PublisherGraph():
     games=Top100()
@@ -79,7 +79,7 @@ def playtimeByGenre(genre): #we are using playtime of two weeks because using fo
     average_playtime_twoweeks=games.median_playtime.mean()
     return average_playtime_twoweeks
 def cleanGames():
-    df = pd.read_csv('steam.csv')
+    df = pd.read_csv('./steam.csv')
     #clean genres
     cleanedgenres=[]
     genres=(df.genres.values.tolist())

@@ -1,0 +1,11 @@
+site_name: Steam Project Documentation
+nav:
+  - Home: index.md
+  - GamesFromPublisher: GamesFromPublisher.ipynb
+  - GamesInGenre: GamesInGenre.ipynb
+  - GenreOfPublisher: GenreOfPublisher.ipynb
+  - SumReviews: SumReviews.ipynb
+
+theme: readthedocs
+plugins:
+  - mkdocs-jupyter
