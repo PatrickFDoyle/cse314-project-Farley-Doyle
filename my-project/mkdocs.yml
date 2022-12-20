@@ -10,6 +10,7 @@ nav:
   - PublisherGraph: PublisherGraph.ipynb
   - PlaytimeByGenre: PlaytimeByGenre.ipynb
   - CleanGames: CleanGames.ipynb
+  - Installation: Installation.ipynb
 
 theme: readthedocs
 plugins:
