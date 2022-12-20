@@ -72,12 +72,12 @@ def PublisherGraph():
     plt.xticks(fontsize=14,rotation = 90)
     plt.show()
 
-def playtimeByGenre(genre): #we are using playtime of two weeks because using forever playtime massively skews the data towards outliers, and we get ridculous results like the average playtime being 300 hours.
+def PlaytimeByGenre(genre): #We are using median playtime as it is a better of the average than mean playtime as it is less effected by outliers
     games=GamesInGenre(genre)
     games['median_playtime']=pd.to_numeric(games["median_playtime"])
     average_playtime_twoweeks=games.median_playtime.mean()
     return average_playtime_twoweeks
-def cleanGames():
+def CleanGames():
     df = pd.read_csv('./steam.csv')
     #clean genres
     cleanedgenres=[]

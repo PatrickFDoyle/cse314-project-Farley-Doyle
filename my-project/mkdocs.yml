@@ -8,6 +8,8 @@ nav:
   - ReceptionByGenre: ReceptionByGenre.ipynb
   - Top100: Top100.ipynb
   - PublisherGraph: PublisherGraph.ipynb
+  - PlaytimeByGenre: PlaytimeByGenre.ipynb
+  - CleanGames: CleanGames.ipynb
 
 theme: readthedocs
 plugins:
